@@ -1,4 +1,5 @@
 <script>
+	import { fade } from 'svelte/transition';
 	import { initializeApp } from 'firebase/app';
 	import {
 		getFirestore,
@@ -58,31 +59,42 @@
 	};
 </script>
 
-<input type="text" placeholder="Add a task" bind:value={task} />
-<button on:click={addTodo}>Add</button>
+<div class="w-full h-screen flex flex-col gap-3">
+	<div class="mx-auto">THIS IS LOGO</div>
+	<div class="flex w-72 mx-auto bg-slate-200  rounded-md">
+		<input class="bg-slate-200 p-4" type="text" placeholder="Add a task" bind:value={task} />
+		<button class="inline w-full" on:click={addTodo}>Add</button>
+	</div>
 
-<ul>
-	{#each todos as todo}
-		<li class:complete={todo.isComplete}>
-			{todo.task}
+	<ul class="w-72 h-full mx-auto my-2 overflow-y-auto">
+		{#each todos as todo}
+			<li
+				transition:fade
+				class:complete={todo.isComplete}
+				class="flex justify-between rounded-md bg-slate-200 mb-1 px-2 py-1 transition duration-200"
+			>
+				<span>{todo.task}</span>
 
-			<button on:click={() => checkTodo(todo)}>
-				<i class="fas fa-check" />
-			</button>
+				<div>
+					<button on:click={() => checkTodo(todo)}>
+						<i class="fas fa-check" />
+					</button>
 
-			<button on:click={() => deleteTodo(todo)}>
-				<i class="fas fa-close" />
-			</button>
-		</li>
-	{:else}
-		<li>There is nothing to do</li>
-	{/each}
-</ul>
+					<button on:click={() => deleteTodo(todo)}>
+						<i class="fas fa-trash" />
+					</button>
+				</div>
+			</li>
+		{:else}
+			<li>There is nothing to do</li>
+		{/each}
+	</ul>
+</div>
 
 <svelte:window on:keypress={keyPressed} />
 
 <style>
 	.complete {
-		text-decoration: line-through;
+		background-color: green;
 	}
 </style>
